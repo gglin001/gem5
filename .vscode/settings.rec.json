@@ -1,0 +1,10 @@
+{
+    "clangd.path": "/root/micromamba/envs/pyenv/bin/clangd",
+    "clangd.arguments": [
+        "-pretty",
+        "--background-index",
+        "--enable-config",
+        "--all-scopes-completion",
+        "--compile-commands-dir=${workspaceFolder}/build/RISCV"
+    ]
+}

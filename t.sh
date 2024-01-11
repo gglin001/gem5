@@ -1,6 +1,12 @@
 # docker
 docker run -d -it \
-    --name gem5_dev_0 \
+    --name gem5_rv_dev_0 \
+    -v $PWD:/gem5 \
+    -w /gem5 \
+    gem5:latest
+
+docker run -d -it \
+    --name gem5_all_dev_0 \
     -v $PWD:/gem5 \
     -w /gem5 \
     gem5:latest
