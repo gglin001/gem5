@@ -13,6 +13,9 @@ docker run -d -it \
 pip install -U scons
 apt install libcapstone-dev
 
+# cannot build with conda env
+micromamba deactivate
+
 # build
 scons -j9 build/ALL/gem5.opt
 
