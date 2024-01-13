@@ -29,3 +29,7 @@ scons build/ALL/compile_commands.json
 # only RISCV
 scons -j9 build/RISCV/gem5.fast
 scons build/RISCV/compile_commands.json
+
+# optional: cp files for python type-hint
+cp build/ALL/python/m5/defines.py src/python/m5/
+cp build/ALL/python/m5/info.py src/python/m5/
