@@ -5,6 +5,13 @@
         "--background-index",
         "--enable-config",
         "--all-scopes-completion",
-        "--compile-commands-dir=${workspaceFolder}/build/RISCV"
+        "--compile-commands-dir=${workspaceFolder}/build/ALL"
+    ],
+    "terminal.integrated.env.linux": {
+        "EXT_PATH": "${workspaceFolder}/build/ALL",
+        // "EXT_PYTHONPATH": "${workspaceFolder}/build/ALL/python",
+    },
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/src/python"
     ]
 }
