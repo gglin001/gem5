@@ -2,25 +2,33 @@
 docker run -d -it \
     --name gem5_rv_dev_0 \
     -v $PWD:/gem5 \
+    -v $PWD/../:/repos \
     -w /gem5 \
     gem5:latest
 
 docker run -d -it \
     --name gem5_all_dev_0 \
     -v $PWD:/gem5 \
+    -v $PWD/../:/repos \
     -w /gem5 \
     gem5:latest
 
 # use clang
 export CC=clang
 export CXX=clang++
+# or
+cat >>/root/.bashrc <<-EOF
+# micromamba deactivate
+export CC=clang
+export CXX=clang++
+EOF
+
+# cannot build with conda env
+micromamba deactivate
 
 # pip install -r requirements.txt
 pip install -U scons
 apt install libcapstone-dev
-
-# cannot build with conda env
-micromamba deactivate
 
 # all
 scons -j9 build/ALL/gem5.opt
