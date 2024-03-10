@@ -29,6 +29,8 @@ import importlib.abc
 import importlib.util
 import os
 
+M5_DEBUG_FLAG = os.environ.get("M5_DEBUG_FLAG", False)
+
 
 class ByteCodeLoader(importlib.abc.Loader):
     def __init__(self, code):
@@ -56,6 +58,9 @@ class CodeImporter:
             raise AttributeError(f"{modpath} already found in importer")
 
         self.modules[modpath] = (abspath, code)
+
+        if M5_DEBUG_FLAG:
+            print(f"modpath: {modpath} : abspath: {abspath}")
 
     def find_spec(self, fullname, path, target=None):
         if fullname not in self.modules:
