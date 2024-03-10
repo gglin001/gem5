@@ -1,5 +1,4 @@
 {
-    "clangd.path": "/root/micromamba/envs/pyenv/bin/clangd",
     "clangd.arguments": [
         "-pretty",
         "--background-index",
@@ -9,7 +8,7 @@
     ],
     "terminal.integrated.env.linux": {
         "EXT_PATH": "${workspaceFolder}/build/ALL",
-        // "EXT_PYTHONPATH": "${workspaceFolder}/build/ALL/python",
+        "EXT_PYTHONPATH": "${workspaceFolder}/src/python"
     },
     "python.analysis.extraPaths": [
         "${workspaceFolder}/src/python"
