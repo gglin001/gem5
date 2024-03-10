@@ -60,7 +60,9 @@ class CodeImporter:
         self.modules[modpath] = (abspath, code)
 
         if M5_DEBUG_FLAG:
-            print(f"modpath: {modpath} : abspath: {abspath}")
+            import sys
+
+            print(f"{modpath},{abspath}", file=sys.stderr)
 
     def find_spec(self, fullname, path, target=None):
         if fullname not in self.modules:

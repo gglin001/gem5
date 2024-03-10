@@ -38,3 +38,4 @@ typings
 # from build/ALL/python/m5/
 src/python/m5/defines.py
 src/python/m5/info.py
+*.pyi
