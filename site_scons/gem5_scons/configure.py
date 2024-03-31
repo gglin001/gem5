@@ -41,6 +41,7 @@
 import contextlib
 import os
 
+import SCons.SConf
 import SCons.Script
 import SCons.Util
 
@@ -99,7 +100,7 @@ int main(){{
     return ret
 
 
-def CheckPythonLib(context):
+def CheckPythonLib(context: SCons.SConf.SConfBase):
     context.Message("Checking Python version... ")
     ret = context.TryRun(
         r"""
