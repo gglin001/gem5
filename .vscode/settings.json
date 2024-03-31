@@ -1,0 +1,17 @@
+{
+    "clangd.arguments": [
+        // "-log=verbose",
+        "-pretty",
+        "--background-index",
+        "--enable-config",
+        "--all-scopes-completion",
+        "--compile-commands-dir=${workspaceFolder}/build/ALL"
+    ],
+    "terminal.integrated.env.linux": {
+        "EXT_PATH": "${workspaceFolder}/build/ALL",
+        "EXT_PYTHONPATH": "${workspaceFolder}/src/python",
+    },
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/src/python"
+    ]
+}
