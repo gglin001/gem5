@@ -1,7 +1,7 @@
 # micromamba install scons
 # micromamba install pybind11
 # micromamba install gperftools # for tcmalloc
-# micromamba install protobuf
+# micromamba install protobuf # 4.25.3
 # micromamba install hdf5
 # apt install -y libcapstone-dev
 
@@ -9,12 +9,13 @@
 
 export PYTHON_CONFIG=$(which python3-config)
 export LD_LIBRARY_PATH="$CONDA_PREFIX/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="$CONDA_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 export CC=clang
 export CXX=clang++
 
-scons \
-  -j9 \
-  build/ALL/gem5.opt
+scons -j`nproc` build/RISCV/gem5.opt
+
+# scons -j`nproc` build/ALL/gem5.opt
 
 ###############################################################################
 
