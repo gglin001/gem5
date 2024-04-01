@@ -1,10 +1,3 @@
-# micromamba install scons
-# micromamba install pybind11
-# micromamba install gperftools # for tcmalloc
-# micromamba install protobuf # 4.25.3
-# micromamba install hdf5
-# apt install -y libcapstone-dev
-
 # for vscode
 cat >>/root/.bashrc <<-EOF
 export PATH=\${EXT_PATH}:\$PATH
@@ -23,18 +16,18 @@ export PKG_CONFIG_PATH="$CONDA_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 export CC=clang
 export CXX=clang++
 
-# scons -j`nproc` build/ALL/gem5.opt
-# scons build/ALL/compile_commands.json
+scons -j$(nproc) build/ALL/gem5.opt
+scons build/ALL/compile_commands.json
 # or
-scons -j`nproc` build/RISCV/gem5.opt
-scons build/RISCV/compile_commands.json
+# scons -j$(nproc) build/RISCV/gem5.opt
+# scons build/RISCV/compile_commands.json
 
 # optional: cp files for python type-hint
-# cp build/ALL/python/m5/defines.py src/python/m5/
-# cp build/ALL/python/m5/info.py src/python/m5/
+cp build/ALL/python/m5/defines.py src/python/m5/
+cp build/ALL/python/m5/info.py src/python/m5/
 # or
-cp build/RISCV/python/m5/defines.py src/python/m5/
-cp build/RISCV/python/m5/info.py src/python/m5/
+# cp build/RISCV/python/m5/defines.py src/python/m5/
+# cp build/RISCV/python/m5/info.py src/python/m5/
 
 ###############################################################################
 
