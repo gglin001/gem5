@@ -74,6 +74,10 @@ def main():
             else:
                 deal_m5_init(mod, abspath)
 
+    # special case, hardcode
+    imp = f"from ....sim.System import System as System"
+    print(imp, file=fp_m5_objects_init)
+
 
 if __name__ == "__main__":
     main()
