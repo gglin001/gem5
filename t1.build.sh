@@ -7,12 +7,12 @@
 
 # for vscode
 cat >>/root/.bashrc <<-EOF
-export PATH=\$PATH:\${EXT_PATH}
-export PYTHONPATH=\$PYTHONPATH:\${EXT_PYTHONPATH}
+export PATH=\${EXT_PATH}:\$PATH
+export PYTHONPATH=\${EXT_PYTHONPATH}:\$PYTHONPATH
 EOF
 
 cat >>/root/.bashrc <<-EOF
-export LD_LIBRARY_PATH="\$CONDA_PREFIX/lib:\$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH=\${CONDA_PREFIX}/lib:\${LD_LIBRARY_PATH}
 EOF
 
 ###############################################################################
