@@ -1,7 +1,6 @@
 /*
- * Copyright (c) 2018 TU Dresden
- * Copyright (c) 2020 Barkhausen Institut
- * All rights reserved
+ * Copyright (c) 2024 The Regents of the University of California
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -27,53 +26,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "arch/riscv/bare_metal/fs_workload.hh"
+#include "test_objects/stat_tester.hh"
 
-#include "arch/riscv/faults.hh"
-#include "base/loader/object_file.hh"
-#include "sim/system.hh"
-#include "sim/workload.hh"
+#include "base/stats/group.hh"
 
 namespace gem5
 {
 
-namespace RiscvISA
-{
-
-BareMetal::BareMetal(const Params &p) : Workload(p),
-    _isBareMetal(p.bare_metal),
-    bootloader(loader::createObjectFile(p.bootloader))
-{
-    fatal_if(!bootloader, "Could not load bootloader file %s.", p.bootloader);
-    bootloaderSymtab = bootloader->symtab();
-
-    if (p.auto_reset_vect) {
-        _resetVect = bootloader->entryPoint();
-    } else {
-        _resetVect = p.reset_vect;
-    }
-
-    loader::debugSymbolTable.insert(bootloaderSymtab);
-}
-
-BareMetal::~BareMetal()
-{
-    delete bootloader;
-}
-
 void
-BareMetal::initState()
+ScalarStatTester::setStats()
 {
-    Workload::initState();
-
-    warn_if(!bootloader->buildImage().write(system->physProxy),
-            "Could not load sections to memory.");
-
-    for (auto *tc: system->threads) {
-        RiscvISA::Reset().invoke(tc);
-        tc->activate();
-    }
+    stats.scalar = params.value;
 }
 
-} // namespace RiscvISA
+ScalarStatTester::ScalarStatTesterStats::ScalarStatTesterStats(
+    statistics::Group *parent,
+    const ScalarStatTesterParams &params
+) : statistics::Group(parent),
+    scalar(this,
+        params.name.c_str(),
+        statistics::units::Count::get(),
+        params.description.c_str()
+    )
+{
+}
+
 } // namespace gem5
