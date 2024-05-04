@@ -1,4 +1,6 @@
-# Copyright (c) 2022 The Regents of the University of California
+#!/bin/bash
+
+# Copyright (c) 2024 The Regents of the University of California
 # All Rights Reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -24,8 +26,13 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-FROM --platform=${BUILDPLATFORM} ubuntu:22.04
+# This script is run when the Docker container specified in devcontainer.json
+# is created.
 
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt -y update && apt -y upgrade && \
-    apt -y install build-essential m4 scons python3-dev
+set -e
+
+# Refresh the git index.
+git update-index
+
+# Install the pre-commit checks.
+./util/pre-commit-install.sh

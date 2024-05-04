@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2024 ARM Limited
- * All rights reserved.
+ * Copyright (c) 2024 Arm Limited
+ * All rights reserved
  *
  * The license below extends only to copyright in the software and shall
  * not be construed as granting a license to any other intellectual
@@ -35,55 +35,71 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "partition_fields_extension.hh"
+#ifndef __ARCH_ARM_REGS_MISC_ACCESSORS_HH__
+#define __ARCH_ARM_REGS_MISC_ACCESSORS_HH__
+
+#include "arch/arm/regs/misc_types.hh"
+#include "cpu/thread_context.hh"
 
 namespace gem5
 {
 
-namespace partitioning_policy
+namespace ArmISA
 {
 
-std::unique_ptr<ExtensionBase>
-PartitionFieldExtention::clone() const
+namespace misc_regs
 {
-    return std::make_unique<PartitionFieldExtention>(*this);
+
+struct FarAccessor
+{
+    using type = RegVal;
+    static const MiscRegIndex el0 = NUM_MISCREGS;
+    static const MiscRegIndex el1 = MISCREG_FAR_EL1;
+    static const MiscRegIndex el2 = MISCREG_FAR_EL2;
+    static const MiscRegIndex el3 = MISCREG_FAR_EL3;
+};
+
+template <typename RegAccessor>
+MiscRegIndex
+getRegVersion(ExceptionLevel el)
+{
+    switch (el) {
+      case EL0:
+        return RegAccessor::el0;
+      case EL1:
+        return RegAccessor::el1;
+      case EL2:
+        return RegAccessor::el2;
+      case EL3:
+        return RegAccessor::el3;
+      default:
+        panic("Invalid EL\n");
+    }
 }
 
-uint64_t
-PartitionFieldExtention::getPartitionID() const
+template <typename RegAccessor>
+typename RegAccessor::type
+readRegister(ThreadContext *tc, ExceptionLevel el)
 {
-    return this->_partitionID;
+    return tc->readMiscReg(getRegVersion<RegAccessor>(el));
 }
 
-uint64_t
-PartitionFieldExtention::getPartitionMonitoringID() const
+template <typename RegAccessor>
+typename RegAccessor::type
+readRegisterNoEffect(ThreadContext *tc, ExceptionLevel el)
 {
-    return this->_partitionMonitoringID;
+    return tc->readMiscRegNoEffect(getRegVersion<RegAccessor>(el));
 }
 
+template <typename RegAccessor>
 void
-PartitionFieldExtention::setPartitionID(uint64_t id)
+writeRegister(ThreadContext *tc, RegVal val, ExceptionLevel el)
 {
-    this->_partitionID = id;
+    tc->setMiscReg(getRegVersion<RegAccessor>(el), val);
 }
 
-void
-PartitionFieldExtention::setPartitionMonitoringID(uint64_t id)
-{
-    this->_partitionMonitoringID = id;
-}
-
-uint64_t
-readPacketPartitionID (PacketPtr pkt)
-{
-    // get partition_id from PartitionFieldExtention
-    std::shared_ptr<PartitionFieldExtention> ext =
-        pkt->req->getExtension<PartitionFieldExtention>();
-
-    // use default value if extension is not set
-    return (ext != nullptr) ? ext->getPartitionID() : DEFAULT_PARTITION_ID;
-}
-
-} // namespace partitioning_policy
-
+} // namespace misc_regs
+} // namespace ArmISA
 } // namespace gem5
+
+#endif // __ARCH_ARM_REGS_MISC_ACCESSORS_HH__
