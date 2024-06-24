@@ -890,20 +890,31 @@ class TableWalker : public ClockedObject
 
         /** If the access comes from the secure state. */
         bool isSecure;
+        /** Whether lookups should be treated as using the secure state.
+         * This is usually the same as isSecure, but can be set to false by the
+         * long descriptor table attributes. */
+        bool secureLookup = false;
 
         /** True if table walks are uncacheable (for table descriptors) */
         bool isUncacheable;
 
         /** Helper variables used to implement hierarchical access permissions
-         * when the long-desc. format is used (LPAE only) */
-        bool secureLookup;
-        bool rwTable;
-        bool userTable;
-        bool xnTable;
-        bool pxnTable;
+         * when the long-desc. format is used. */
+        struct LongDescData
+        {
+            bool rwTable = false;
+            bool userTable = false;
+            bool xnTable = false;
+            bool pxnTable = false;
+        };
+        std::optional<LongDescData> longDescData;
 
         /** Hierarchical access permission disable */
         bool hpd;
+
+        uint8_t sh;
+        uint8_t irgn;
+        uint8_t orgn;
 
         /** Flag indicating if a second stage of lookup is required */
         bool stage2Req;
@@ -1133,6 +1144,7 @@ class TableWalker : public ClockedObject
                       LongDescriptor &lDescriptor);
     void memAttrsAArch64(ThreadContext *tc, TlbEntry &te,
                          LongDescriptor &lDescriptor);
+    void memAttrsWalkAArch64(TlbEntry &te);
 
     static LookupLevel toLookupLevel(uint8_t lookup_level_as_int);
 
@@ -1188,6 +1200,9 @@ class TableWalker : public ClockedObject
     /// system-wide setting or by the TCR_ELx IPS/PS setting
     bool checkAddrSizeFaultAArch64(Addr addr, int pa_range);
 
+    /// Returns true if the table walk should be uncacheable
+    bool uncacheableWalk() const;
+
     Fault processWalkAArch64();
     void processWalkWrapper();
     EventFunctionWrapper doProcessEvent;
@@ -1200,6 +1215,8 @@ class TableWalker : public ClockedObject
     void stashCurrState(int queue_idx);
 
     static uint8_t pageSizeNtoStatBin(uint8_t N);
+
+    void mpamTagTableWalk(RequestPtr &req) const;
 
   public: /* Testing */
     TlbTestInterface *test;

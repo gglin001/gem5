@@ -41,6 +41,7 @@
 #include "arch/arm/mmu.hh"
 
 #include "arch/arm/isa.hh"
+#include "arch/arm/mpam.hh"
 #include "arch/arm/reg_abi.hh"
 #include "arch/arm/stage2_lookup.hh"
 #include "arch/arm/table_walker.hh"
@@ -207,6 +208,8 @@ MMU::testAndFinalize(const RequestPtr &req,
     // If we don't have a valid tlb entry it means virtual memory
     // is not enabled
     auto domain = te ? te-> domain : TlbEntry::DomainType::NoAccess;
+
+    mpam::tagRequest(tc, req, mode == Execute);
 
     // Check for a tester generated address fault
     Fault fault = testTranslation(req, mode, domain, state);
@@ -810,7 +813,8 @@ MMU::translateMmuOff(ThreadContext *tc, const RequestPtr &req, Mode mode,
     // security state of the processor
     if (state.isSecure)
         req->setFlags(Request::SECURE);
-
+    else
+        req->clearFlags(Request::SECURE);
     if (state.aarch64) {
         bool selbit = bits(vaddr, 55);
         TCR tcr1 = tc->readMiscReg(MISCREG_TCR_EL1);
@@ -914,6 +918,8 @@ MMU::translateMmuOn(ThreadContext* tc, const RequestPtr &req, Mode mode,
 
         if (state.isSecure && !te->ns) {
             req->setFlags(Request::SECURE);
+        } else {
+            req->clearFlags(Request::SECURE);
         }
         if (!is_fetch && fault == NoFault &&
             (vaddr & mask(flags & AlignmentMask)) &&

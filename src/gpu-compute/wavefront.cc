@@ -118,6 +118,7 @@ void
 Wavefront::initRegState(HSAQueueEntry *task, int wgSizeInWorkItems)
 {
     int regInitIdx = 0;
+    gfxVersion = task->gfxVersion();
 
     // Iterate over all the init fields and check which
     // bits are enabled. Useful information can be found here:
@@ -378,8 +379,28 @@ Wavefront::initRegState(HSAQueueEntry *task, int wgSizeInWorkItems)
                         wfSlotId, wfDynId, physSgprIdx, workGroupId[2]);
                 break;
               case PrivSegWaveByteOffset:
+
+                // For architected flat scratch, this enable is reused to set
+                // the FLAT_SCRATCH register pair to the scratch backing
+                // memory: https://llvm.org/docs/AMDGPUUsage.html#flat-scratch
+                if (task->gfxVersion() == GfxVersion::gfx942) {
+                    archFlatScratchAddr =
+                        task->amdQueue.scratch_backing_memory_location;
+
+                    DPRINTF(GPUInitAbi, "CU%d: WF[%d][%d]: wave[%d] "
+                            "Setting architected flat scratch = %x\n",
+                            computeUnit->cu_id, simdId, wfSlotId, wfDynId,
+                            archFlatScratchAddr);
+
+                    break;
+                }
+
+                // Not architected flat scratch. Write the scratch wavefront
+                // offset: https://llvm.org/docs/AMDGPUUsage.html
+                //              #amdgpu-amdhsa-initial-kernel-execution-state
                 physSgprIdx =
                     computeUnit->registerManager->mapSgpr(this, regInitIdx);
+
                 /**
                   * the compute_tmpring_size_wavesize specifies the number of
                   * kB allocated per wavefront, hence the multiplication by
@@ -442,7 +463,8 @@ Wavefront::initRegState(HSAQueueEntry *task, int wgSizeInWorkItems)
     // Default to false and set to true for gem5 supported ISAs.
     bool packed_work_item_id = false;
 
-    if (task->gfxVersion() == GfxVersion::gfx90a) {
+    if (task->gfxVersion() == GfxVersion::gfx90a ||
+        task->gfxVersion() == GfxVersion::gfx942) {
         packed_work_item_id = true;
     }
 
@@ -1005,6 +1027,14 @@ Wavefront::exec()
         computeUnit->stats.controlFlowDivergenceDist.sample(num_active_lanes);
         computeUnit->stats.numVecOpsExecuted += num_active_lanes;
 
+        if (ii->isMFMA()) {
+            computeUnit->stats.numVecOpsExecutedMFMA += num_active_lanes;
+            if (ii->isI8()) {
+                computeUnit->stats.numVecOpsExecutedMFMAI8
+                    += num_active_lanes;
+            }
+        }
+
         if (ii->isF16() && ii->isALU()) {
             if (ii->isF32() || ii->isF64()) {
                 fatal("Instruction is tagged as both (1) F16, and (2)"
@@ -1024,6 +1054,10 @@ Wavefront::exec()
             else if (ii->isMAD()) {
                 computeUnit->stats.numVecOpsExecutedMAD16 += num_active_lanes;
                 computeUnit->stats.numVecOpsExecutedTwoOpFP
+                    += num_active_lanes;
+            }
+            else if (ii->isMFMA()) {
+                computeUnit->stats.numVecOpsExecutedMFMAF16
                     += num_active_lanes;
             }
         }
@@ -1048,6 +1082,10 @@ Wavefront::exec()
                 computeUnit->stats.numVecOpsExecutedTwoOpFP
                     += num_active_lanes;
             }
+            else if (ii->isMFMA()) {
+                computeUnit->stats.numVecOpsExecutedMFMAF32
+                    += num_active_lanes;
+            }
         }
         if (ii->isF64() && ii->isALU()) {
             if (ii->isF16() || ii->isF32()) {
@@ -1068,6 +1106,10 @@ Wavefront::exec()
             else if (ii->isMAD()) {
                 computeUnit->stats.numVecOpsExecutedMAD64 += num_active_lanes;
                 computeUnit->stats.numVecOpsExecutedTwoOpFP
+                    += num_active_lanes;
+            }
+            else if (ii->isMFMA()) {
+                computeUnit->stats.numVecOpsExecutedMFMAF64
                     += num_active_lanes;
             }
         }

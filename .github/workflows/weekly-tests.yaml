@@ -152,7 +152,7 @@ jobs:
 
     dramsys-tests:
         runs-on: [self-hosted, linux, x64]
-        container: ghcr.io/gem5/ubuntu-24.04_all-dependencies:latest
+        container: ghcr.io/gem5/ubuntu-22.04_all-dependencies:latest
         timeout-minutes: 4320 # 3 days
         steps:
             - uses: actions/checkout@v4
@@ -186,5 +186,7 @@ jobs:
         needs:
             - testlib-very-long-tests
             - dramsys-tests
+            - LULESH-test
+            - HACC-test
         steps:
             - run: echo "This weekly tests have passed."

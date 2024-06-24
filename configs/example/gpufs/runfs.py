@@ -134,9 +134,9 @@ def addRunFSOptions(parser):
     parser.add_argument(
         "--gpu-device",
         default="Vega10",
-        choices=["Vega10", "MI100", "MI200"],
-        help="GPU model to run: Vega10 (gfx900), MI100 (gfx908), or "
-        "MI200 (gfx90a)",
+        choices=["Vega10", "MI100", "MI200", "MI300X"],
+        help="GPU model to run: Vega10 (gfx900), MI100 (gfx908), MI200 "
+        "(gfx90a), or MI300X (gfx942).",
     )
 
     parser.add_argument(
@@ -193,6 +193,28 @@ def addRunFSOptions(parser):
         default=False,
         action="store_true",
         help="Disable KVM perf counters (use this with LSF / ETX)",
+    )
+
+    parser.add_argument(
+        "--tcp-rp",
+        type=str,
+        default="TreePLRURP",
+        help="cache replacement policy" "policy for tcp",
+    )
+
+    parser.add_argument(
+        "--tcc-rp",
+        type=str,
+        default="TreePLRURP",
+        help="cache replacement policy" "policy for tcc",
+    )
+
+    # sqc rp both changes sqc rp and scalar cache rp
+    parser.add_argument(
+        "--sqc-rp",
+        type=str,
+        default="TreePLRURP",
+        help="cache replacement policy" "policy for sqc",
     )
 
 

@@ -94,7 +94,7 @@ const std::map<uint64_t, const char *> BaseSemihosting::exitCodes{
         {0x20029, "semi:ADP_Stopped_DivisionByZero"},
 };
 
-const std::vector<uint8_t> BaseSemihosting::features{
+const std::array<uint8_t, 5> BaseSemihosting::features{
         0x53, 0x48, 0x46, 0x42, // Magic
         0x3, // EXT_EXIT_EXTENDED, EXT_STDOUT_STDERR
 };
@@ -157,9 +157,18 @@ BaseSemihosting::unserialize(CheckpointIn &cp)
         files[i] = FileBase::create(*this, cp, csprintf("file%i", i));
 }
 
-std::string
+std::optional<std::string>
 BaseSemihosting::readString(ThreadContext *tc, Addr ptr, size_t len)
 {
+    if (len > 65536) {
+      // If the semihosting call passes an incorrect argument, reject it rather
+      // than attempting to allocate a buffer of that size. We chose 64K as
+      // an arbitrary limit here since no valid program should be attempting
+      // to open a file with such a large filename.
+      warn("BaseSemihosting::readString(): attempting to read too large "
+           "(%d bytes) string from %#x", len, ptr);
+      return std::nullopt;
+    }
     std::vector<char> buf(len + 1);
 
     buf[len] = '\0';
@@ -179,7 +188,10 @@ BaseSemihosting::callOpen(
     if (!mode || !name_base)
         return retError(EINVAL);
 
-    std::string fname = readString(tc, name_base, name_size);
+    std::optional<std::string> fnameOpt = readString(tc, name_base, name_size);
+    if (!fnameOpt.has_value())
+        return retError(ERANGE);
+    std::string fname = *fnameOpt;
     if (!fname.empty() && fname.front() != '/' && fname != ":tt" &&
             fname != ":semihosting-features")
         fname = filesRootDir + fname;
@@ -226,6 +238,7 @@ BaseSemihosting::callWriteC(ThreadContext *tc, InPlaceArg arg)
 
     DPRINTF(Semihosting, "Semihosting SYS_WRITEC('%c')\n", c);
     std::cout.put(c);
+    std::cout.flush();
 
     return retOK(0);
 }
@@ -238,6 +251,7 @@ BaseSemihosting::callWrite0(ThreadContext *tc, InPlaceArg arg)
     std::string str;
     proxy.readString(str, arg.addr);
     std::cout.write(str.c_str(), str.size());
+    std::cout.flush();
 
     return retOK(0);
 }
@@ -364,9 +378,11 @@ BaseSemihosting::RetErrno
 BaseSemihosting::callRemove(
         ThreadContext *tc, Addr name_base, size_t name_size)
 {
-    std::string fname = readString(tc, name_base, name_size);
+    std::optional<std::string> fname = readString(tc, name_base, name_size);
 
-    if (remove(fname.c_str()) != 0) {
+    if (!fname.has_value()) {
+        return retError(ERANGE);
+    } else if (remove(fname->c_str()) != 0) {
         return retError(errno);
     } else {
         return retOK(0);
@@ -377,10 +393,11 @@ BaseSemihosting::RetErrno
 BaseSemihosting::callRename(ThreadContext *tc, Addr from_addr,
         size_t from_size, Addr to_addr, size_t to_size)
 {
-    std::string from = readString(tc, from_addr, from_size);
-    std::string to = readString(tc, to_addr, to_size);
-
-    if (rename(from.c_str(), to.c_str()) != 0) {
+    std::optional<std::string> from = readString(tc, from_addr, from_size);
+    std::optional<std::string> to = readString(tc, to_addr, to_size);
+    if (!from.has_value() || !to.has_value()) {
+        return retError(ERANGE);
+    } else if (rename(from->c_str(), to->c_str()) != 0) {
         return retError(errno);
     } else {
         return retOK(0);
@@ -402,9 +419,11 @@ BaseSemihosting::callTime(ThreadContext *tc)
 BaseSemihosting::RetErrno
 BaseSemihosting::callSystem(ThreadContext *tc, Addr cmd_addr, size_t cmd_size)
 {
-    const std::string cmd = readString(tc, cmd_addr, cmd_size);
+    const std::optional<std::string> cmd = readString(tc, cmd_addr, cmd_size);
+    if (!cmd.has_value())
+      return retError(ERANGE);
     warn("Semihosting: SYS_SYSTEM not implemented. Guest tried to run: %s\n",
-            cmd);
+            *cmd);
     return retError(EINVAL);
 }
 
@@ -656,12 +675,18 @@ FileFeatures(BaseSemihosting &_parent, const char *_name, const char *_mode) :
 {}
 
 int64_t
+BaseSemihosting::FileFeatures::flen()
+{
+    return features.size();
+}
+
+int64_t
 BaseSemihosting::FileFeatures::read(uint8_t *buffer, uint64_t size)
 {
     int64_t len = 0;
 
-    for (; pos < size && pos < BaseSemihosting::features.size(); pos++)
-        buffer[len++] = BaseSemihosting::features[pos];
+    for (; len < size && pos < features.size(); pos++)
+        buffer[len++] = features[pos];
 
     return len;
 }

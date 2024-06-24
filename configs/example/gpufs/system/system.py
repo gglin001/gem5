@@ -108,7 +108,7 @@ def makeGpuFSSystem(args):
     system.cpu.append(shader)
 
     # This arbitrary address is something in the X86 I/O hole
-    hsapp_gpu_map_paddr = 0xE00000000
+    hsapp_gpu_map_paddr = 0xE0000000
     hsapp_pt_walker = VegaPagetableWalker()
     gpu_hsapp = HSAPacketProcessor(
         pioAddr=hsapp_gpu_map_paddr,
@@ -161,7 +161,7 @@ def makeGpuFSSystem(args):
             0x7D000,
         ]
         sdma_sizes = [0x1000] * 8
-    elif args.gpu_device == "MI200":
+    elif args.gpu_device == "MI200" or args.gpu_device == "MI300X":
         num_sdmas = 5
         sdma_bases = [
             0x4980,

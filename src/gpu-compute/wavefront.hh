@@ -92,6 +92,8 @@ class Wavefront : public SimObject
         S_BARRIER
     };
 
+    // gfx version wavefront is executing
+    GfxVersion gfxVersion;
     // HW slot id where the WF is mapped to inside a SIMD unit
     const int wfSlotId;
     int kernId;
@@ -202,6 +204,9 @@ class Wavefront : public SimObject
     // Index into the Scalar Register File's namespace where the WF's registers
     // will live while the WF is executed
     uint32_t startSgprIndex;
+
+    // Architected flat scratch address for MI300+
+    Addr archFlatScratchAddr = 0;
 
     // Old value of destination gpr (for trace)
     std::vector<uint32_t> oldVgpr;

@@ -1,17 +1,5 @@
-# -*- mode:python -*-
-
-# Copyright (c) 2022  Institute of Computing Technology, Chinese
-#                     Academy of Sciences
+# Copyright (c) 2024 The Regents of the University of California
 # All rights reserved.
-#
-# The license below extends only to copyright in the software and shall
-# not be construed as granting a license to any other intellectual
-# property including but not limited to intellectual property relating
-# to a hardware implementation of the functionality of the software
-# licensed hereunder.  You may use the software subject to the license
-# terms below provided that you ensure that this notice is replicated
-# unmodified and in its entirety in all distributions of the software,
-# modified or unmodified, in source code or in binary form.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -36,14 +24,12 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from m5.objects.VirtIO import VirtIODeviceBase
-from m5.params import *
-from m5.proxy import *
 
-
-class VirtIORng(VirtIODeviceBase):
-    type = "VirtIORng"
-    cxx_header = "dev/virtio/rng.hh"
-    cxx_class = "gem5::VirtIORng"
-
-    qSize = Param.Unsigned(16, "Request queue size")
+from .spatter_generator import SpatterGenerator
+from .spatter_kernel import (
+    SpatterKernel,
+    parse_kernel,
+    partition_trace,
+    prepare_kernels,
+    unroll_trace,
+)
