@@ -1,9 +1,11 @@
 ###############################################################################
 
-gem5.opt --help >_demos/gem5.opt.help.log
-gem5.opt --list-sim-objects >_demos/gem5.opt.list-sim-objects.log
-gem5.opt --debug-help >_demos/gem5.opt.debug-help.log
-gem5.opt --stats-help >_demos/gem5.opt.stats-help.log
+mkdir -p _demos/_log
+
+gem5.opt --help >_demos/_log/gem5.opt.help.log
+gem5.opt --list-sim-objects >_demos/_log/gem5.opt.list-sim-objects.log
+gem5.opt --debug-help >_demos/_log/gem5.opt.debug-help.log
+gem5.opt --stats-help >_demos/_log/gem5.opt.stats-help.log
 
 ###############################################################################
 
