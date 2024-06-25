@@ -1,3 +1,5 @@
+###############################################################################
+
 # for vscode
 cat >>/root/.bashrc <<-EOF
 export PATH=\${EXT_PATH}:\$PATH
@@ -16,33 +18,21 @@ export PKG_CONFIG_PATH="$CONDA_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 export CC=clang
 export CXX=clang++
 
-scons -j$(nproc) build/ALL/gem5.opt
-scons build/ALL/compile_commands.json
-# or
-# scons -j$(nproc) build/RISCV/gem5.opt
-# scons build/RISCV/compile_commands.json
+TARGET=ARM_RISV
+# TARGET=ALL
+# TARGET=RISCV
+
+scons -j$(nproc) build/$TARGET/gem5.opt
+scons build/$TARGET/compile_commands.json
+
+###############################################################################
 
 # optional: cp files for python type-hint
-cp build/ALL/python/m5/defines.py src/python/m5/
-cp build/ALL/python/m5/info.py src/python/m5/
-# or
-# cp build/RISCV/python/m5/defines.py src/python/m5/
-# cp build/RISCV/python/m5/info.py src/python/m5/
+cp build/$TARGET/python/m5/defines.py src/python/m5/
+cp build/$TARGET/python/m5/info.py src/python/m5/
+# check more in `./stubgen`
 
-###############################################################################
-
-# TODO: for python3.12, seems need more latest pybind11 ?
-#
-# Exception ignored in tp_clear of: <class 'MetaSimObject'>
-# TypeError: Missed attribute 'n_fields' of type time.struct_time
-#
-# TypeError: Missed attribute 'n_fields' of type time.struct_time
-# Exception ignored in tp_clear of: <class 'MetaSimObject'>
-#
-
-###############################################################################
-
-# skip pre-commit
-git commit --no-verify -m "misc: wip"
+# optional: gen types
+gem5.opt util/gem5-stubgen.py
 
 ###############################################################################
