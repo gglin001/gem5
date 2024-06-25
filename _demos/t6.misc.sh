@@ -7,6 +7,8 @@ gem5.opt --list-sim-objects >_demos/_log/gem5.opt.list-sim-objects.log
 gem5.opt --debug-help >_demos/_log/gem5.opt.debug-help.log
 gem5.opt --stats-help >_demos/_log/gem5.opt.stats-help.log
 
+scons --help >_demos/_log/scons-help.log
+
 ###############################################################################
 
 # git clone git@github.com:pybind/pybind11.git -b v2.12 --single-branch ext/pybind11
