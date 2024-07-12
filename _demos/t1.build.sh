@@ -19,6 +19,7 @@ EOF
 # export LINKFLAGS="-Wl,-rpath=$CONDA_PREFIX/lib"
 # export RPATH="$CONDA_PREFIX/lib"
 # export CCFLAGS_EXTRA="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk"
+# export RPATH="-Wl,-rpath,/Users/allen/micromamba/envs/pyenv/lib"
 
 ###############################################################################
 
@@ -45,6 +46,7 @@ TARGET=ARM_RISCV
 # ln -s $CONDA_PREFIX/lib/libpython3.11.dylib build/$TARGET/gem5.build/scons_config
 
 scons --no-colors -j$(nproc) build/$TARGET/gem5.opt
+# scons --no-colors -j$(nproc) build/$TARGET/gem5.opt --verbose
 # scons build/$TARGET/compile_commands.json
 
 ###############################################################################

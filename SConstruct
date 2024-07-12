@@ -500,6 +500,7 @@ def config_embedded_python(env: SCons.Environment.Base):
         useful_flags = list(filter(is_useful, flags))
         useful_flags.append('-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk')
         useful_flags.append('-L/Users/allen/micromamba/envs/pyenv/lib')
+        useful_flags.append('-Wl,-rpath,/Users/allen/micromamba/envs/pyenv/lib')
         print(useful_flags)
         env.MergeFlags(' '.join(useful_flags))
 
