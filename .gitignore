@@ -40,3 +40,5 @@ typings
 src/python/m5/defines.py
 src/python/m5/info.py
 *.pyi
+
+build-*
