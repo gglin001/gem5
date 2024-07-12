@@ -18,7 +18,7 @@ export PKG_CONFIG_PATH="$CONDA_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 export CC=clang
 export CXX=clang++
 
-TARGET=ARM_RISV
+TARGET=ARM_RISCV
 # TARGET=ALL
 # TARGET=RISCV
 
