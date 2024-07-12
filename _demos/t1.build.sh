@@ -47,7 +47,7 @@ TARGET=ARM_RISCV
 
 scons --no-colors -j$(nproc) build/$TARGET/gem5.opt
 # scons --no-colors -j$(nproc) build/$TARGET/gem5.opt --verbose
-# scons build/$TARGET/compile_commands.json
+scons build/$TARGET/compile_commands.json
 
 ###############################################################################
 
@@ -69,18 +69,16 @@ gem5.opt util/gem5-stubgen.py
 
 ###############################################################################
 
-#
+# EXE=$PWD/build/ARM_RISCV/gem5py
+# otool -L $EXE
+# install_name_tool -change "@rpath/libc++.1.dylib" "/Users/allen/micromamba/envs/pyenv/lib/libc++.1.dylib" $EXE
+# install_name_tool -change "@rpath/libpython3.11.dylib" "/Users/allen/micromamba/envs/pyenv/lib/libpython3.11.dylib" $EXE
+# install_name_tool -change "@rpath/libz.1.dylib" "/Users/allen/micromamba/envs/pyenv/lib/libz.1.dylib" $EXE
 
-EXE=$PWD/build/ARM_RISCV/gem5py
-otool -L $EXE
-install_name_tool -change "@rpath/libc++.1.dylib" "/Users/allen/micromamba/envs/pyenv/lib/libc++.1.dylib" $EXE
-install_name_tool -change "@rpath/libpython3.11.dylib" "/Users/allen/micromamba/envs/pyenv/lib/libpython3.11.dylib" $EXE
-install_name_tool -change "@rpath/libz.1.dylib" "/Users/allen/micromamba/envs/pyenv/lib/libz.1.dylib" $EXE
-
-EXE=$PWD/build/ARM_RISCV/gem5py_m5
-otool -L $EXE
-install_name_tool -change "@rpath/libc++.1.dylib" "/Users/allen/micromamba/envs/pyenv/lib/libc++.1.dylib" $EXE
-install_name_tool -change "@rpath/libpython3.11.dylib" "/Users/allen/micromamba/envs/pyenv/lib/libpython3.11.dylib" $EXE
-install_name_tool -change "@rpath/libz.1.dylib" "/Users/allen/micromamba/envs/pyenv/lib/libz.1.dylib" $EXE
+# EXE=$PWD/build/ARM_RISCV/gem5py_m5
+# otool -L $EXE
+# install_name_tool -change "@rpath/libc++.1.dylib" "/Users/allen/micromamba/envs/pyenv/lib/libc++.1.dylib" $EXE
+# install_name_tool -change "@rpath/libpython3.11.dylib" "/Users/allen/micromamba/envs/pyenv/lib/libpython3.11.dylib" $EXE
+# install_name_tool -change "@rpath/libz.1.dylib" "/Users/allen/micromamba/envs/pyenv/lib/libz.1.dylib" $EXE
 
 ###############################################################################
