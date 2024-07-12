@@ -12,9 +12,15 @@ EOF
 
 ###############################################################################
 
+# export CCFLAGS_EXTRA="-I$CONDA_PREFIX/include -I$CONDA_PREFIX/include/python3.11"
+# export CCFLAGS_EXTRA="-I/Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include"
+
+###############################################################################
+
 export PYTHON_CONFIG=$(which python3-config)
 export LD_LIBRARY_PATH="$CONDA_PREFIX/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="$CONDA_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
+export CCFLAGS_EXTRA="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -L/Users/allen/micromamba/envs/pyenv/lib"
 export CC=clang
 export CXX=clang++
 

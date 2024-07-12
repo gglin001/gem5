@@ -85,6 +85,8 @@ import SCons
 import SCons.Node
 import SCons.Node.FS
 import SCons.Tool
+import SCons.SConf
+import SCons.Environment
 
 if getattr(SCons, '__version__', None) in ('3.0.0', '3.0.1'):
     # Monkey patch a fix which appears in version 3.0.2, since we only
@@ -468,7 +470,7 @@ main["BIN_TARGET_ARCH"] = (
 
 main['USE_PYTHON'] = not GetOption('without_python')
 
-def config_embedded_python(env):
+def config_embedded_python(env: SCons.Environment.Base):
     # Find Python include and library directories for embedding the
     # interpreter. We rely on python-config to resolve the appropriate
     # includes and linker flags. If you want to link in an alternate version
@@ -496,6 +498,9 @@ def config_embedded_python(env):
         prefixes = ('-l', '-L', '-I')
         is_useful = lambda x: any(x.startswith(prefix) for prefix in prefixes)
         useful_flags = list(filter(is_useful, flags))
+        useful_flags.append('-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk')
+        useful_flags.append('-L/Users/allen/micromamba/envs/pyenv/lib')
+        print(useful_flags)
         env.MergeFlags(' '.join(useful_flags))
 
     env.ParseConfig(cmd, flag_filter)
