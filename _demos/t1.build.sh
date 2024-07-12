@@ -19,16 +19,17 @@ EOF
 
 export PYTHON_CONFIG=$(which python3-config)
 export LD_LIBRARY_PATH="$CONDA_PREFIX/lib:$LD_LIBRARY_PATH"
+export DYLD_LIBRARY_PATH="$CONDA_PREFIX/lib:$DYLD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="$CONDA_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 export CCFLAGS_EXTRA="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -L/Users/allen/micromamba/envs/pyenv/lib"
-export CC=clang
-export CXX=clang++
+export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
 
 TARGET=ARM_RISCV
 # TARGET=ALL
 # TARGET=RISCV
 
-scons -j$(nproc) build/$TARGET/gem5.opt
+scons --no-colors -j$(nproc) build/$TARGET/gem5.opt
 scons build/$TARGET/compile_commands.json
 
 ###############################################################################
@@ -40,5 +41,10 @@ cp build/$TARGET/python/m5/info.py src/python/m5/
 
 # optional: gen types
 gem5.opt util/gem5-stubgen.py
+
+###############################################################################
+
+# EXE=build/ARM_RISCV/gem5.build/scons_config/conftest_2176b2d932a60acfa5b4079f6e5ab92b_0_ec29e9f2931517fd22ea214641da1cb9 >build/ARM_RISCV/gem5.build/scons_config/conftest_2176b2d932a60acfa5b4079f6e5ab92b_0_ec29e9f2931517fd22ea214641da1cb9.out
+# otool -L $EXE
 
 ###############################################################################
