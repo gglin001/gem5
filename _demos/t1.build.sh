@@ -1,4 +1,6 @@
 ###############################################################################
+# tested on macos with conda libs
+###############################################################################
 
 # be carful of protobuf versions
 micromamba install protobuf
