@@ -20,12 +20,17 @@ EOF
 # export RPATH="$CONDA_PREFIX/lib"
 # export CCFLAGS_EXTRA="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk"
 # export RPATH="-Wl,-rpath,/Users/allen/micromamba/envs/pyenv/lib"
+# export CCFLAGS_EXTRA="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -L/Users/allen/micromamba/envs/pyenv/lib -Wl,-rpath,/Users/allen/micromamba/envs/pyenv/lib"
+# export CFLAGS="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -L/Users/allen/micromamba/envs/pyenv/lib -Wl,-rpath,/Users/allen/micromamba/envs/pyenv/lib"
+# useful_flags.append('-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk')
+# useful_flags.append('-L/Users/allen/micromamba/envs/pyenv/lib')
+# useful_flags.append('-Wl,-rpath,/Users/allen/micromamba/envs/pyenv/lib')
 
 ###############################################################################
 
 export PYTHON_CONFIG=$(which python3-config)
-export LD_LIBRARY_PATH="$CONDA_PREFIX/lib:$LD_LIBRARY_PATH"
-export PKG_CONFIG_PATH="$CONDA_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
+# export LD_LIBRARY_PATH="$CONDA_PREFIX/lib:$LD_LIBRARY_PATH"
+# export PKG_CONFIG_PATH="$CONDA_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 

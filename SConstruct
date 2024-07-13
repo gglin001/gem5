@@ -498,13 +498,21 @@ def config_embedded_python(env: SCons.Environment.Base):
         prefixes = ('-l', '-L', '-I')
         is_useful = lambda x: any(x.startswith(prefix) for prefix in prefixes)
         useful_flags = list(filter(is_useful, flags))
-        useful_flags.append('-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk')
-        useful_flags.append('-L/Users/allen/micromamba/envs/pyenv/lib')
-        useful_flags.append('-Wl,-rpath,/Users/allen/micromamba/envs/pyenv/lib')
-        print(useful_flags)
+        # debug
+        # useful_flags.append('-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk')
+        # useful_flags.append('-L/Users/allen/micromamba/envs/pyenv/lib')
+        # useful_flags.append('-Wl,-rpath,/Users/allen/micromamba/envs/pyenv/lib')
+        # print(useful_flags)
         env.MergeFlags(' '.join(useful_flags))
 
     env.ParseConfig(cmd, flag_filter)
+
+    prefix = env.backtick([python_config, "--prefix"]).strip("\n")
+    extra_flags = []
+    extra_flags.append(f"-L{prefix}/lib")
+    extra_flags.append(f"-Wl,-rpath,{prefix}/lib")
+    print(f"extra_flags: {extra_flags}")
+    env.MergeFlags(extra_flags)
 
     env.Prepend(CPPPATH=Dir('ext/pybind11/include/'))
 
