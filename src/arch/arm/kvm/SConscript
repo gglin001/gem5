@@ -40,11 +40,9 @@ Import('*')
 if env['CONF']['KVM_ISA'] != 'arm' or not env['CONF']['USE_ARM_ISA']:
     Return()
 
-env.Append(CCFLAGS=['-Wno-error=mismatched-tags'])
-
-SimObject('KvmGic.py',
-    sim_objects=['MuxingKvmGicV2', 'MuxingKvmGicV3'], tags='arm kvm')
-Source('gic.cc', tags='arm kvm')
+import platform
+host_isa = platform.machine()
+env.TagImplies(f'{host_isa} kvm', 'arm kvm')
 
 SimObject(
     'KvmGic.py',
