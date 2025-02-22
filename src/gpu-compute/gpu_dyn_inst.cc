@@ -314,7 +314,7 @@ void
 GPUDynInst::completeAcc(GPUDynInstPtr gpuDynInst)
 {
     DPRINTF(GPUMem, "CU%d: WF[%d][%d]: mempacket status bitvector="
-            "%#x\n complete",
+            "%#x complete\n",
             cu->cu_id, simdId, wfSlotId, exec_mask);
 
     _staticInst->completeAcc(gpuDynInst);
@@ -882,6 +882,7 @@ GPUDynInst::resolveFlatSegment(const VectorMask &mask)
         }
         wavefront()->execUnitId =  wavefront()->flatLmUnitId;
         wavefront()->decVMemInstsIssued();
+        wavefront()->vmemIssued.erase(seqNum());
         if (isLoad()) {
             wavefront()->rdGmReqsInPipe--;
         } else if (isStore()) {
@@ -963,6 +964,7 @@ GPUDynInst::resolveFlatSegment(const VectorMask &mask)
         // decrement these counters if we are explicitly a FLAT instruction.
         if (isFlat()) {
             wavefront()->decLGKMInstsIssued();
+            wavefront()->lgkmIssued.erase(seqNum());
             if (isLoad()) {
                 wavefront()->rdLmReqsInPipe--;
             } else if (isStore()) {

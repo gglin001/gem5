@@ -376,6 +376,18 @@ namespace ArmISA
         MISCREG_PMCEID1,
         MISCREG_PMCCNTR,
         MISCREG_PMXEVTYPER,
+        MISCREG_PMEVCNTR0,
+        MISCREG_PMEVCNTR1,
+        MISCREG_PMEVCNTR2,
+        MISCREG_PMEVCNTR3,
+        MISCREG_PMEVCNTR4,
+        MISCREG_PMEVCNTR5,
+        MISCREG_PMEVTYPER0,
+        MISCREG_PMEVTYPER1,
+        MISCREG_PMEVTYPER2,
+        MISCREG_PMEVTYPER3,
+        MISCREG_PMEVTYPER4,
+        MISCREG_PMEVTYPER5,
         MISCREG_PMCCFILTR,
         MISCREG_PMXEVCNTR,
         MISCREG_PMUSERENR,
@@ -1153,6 +1165,7 @@ namespace ArmISA
         MISCREG_HFGWTR_EL2,
         MISCREG_HDFGRTR_EL2,
         MISCREG_HDFGWTR_EL2,
+        MISCREG_HAFGRTR_EL2,
 
         // FEAT_MPAM
         MISCREG_MPAMIDR_EL1,
@@ -1171,6 +1184,15 @@ namespace ArmISA
         MISCREG_MPAMVPM5_EL2,
         MISCREG_MPAMVPM6_EL2,
         MISCREG_MPAMVPM7_EL2,
+
+        // S1PIE
+        MISCREG_PIRE0_EL1,
+        MISCREG_PIRE0_EL2,
+        MISCREG_PIRE0_EL12,
+        MISCREG_PIR_EL1,
+        MISCREG_PIR_EL2,
+        MISCREG_PIR_EL3,
+        MISCREG_PIR_EL12,
 
         // NUM_PHYS_MISCREGS specifies the number of actual physical
         // registers, not considering the following pseudo-registers
@@ -2125,6 +2147,18 @@ namespace ArmISA
         "pmceid1",
         "pmccntr",
         "pmxevtyper",
+        "pmevcntr0",
+        "pmevcntr1",
+        "pmevcntr2",
+        "pmevcntr3",
+        "pmevcntr4",
+        "pmevcntr5",
+        "pmevtyper0",
+        "pmevtyper1",
+        "pmevtyper2",
+        "pmevtyper3",
+        "pmevtyper4",
+        "pmevtyper5",
         "pmccfiltr",
         "pmxevcntr",
         "pmuserenr",
@@ -2888,6 +2922,7 @@ namespace ArmISA
         "hfgwtr_el2",
         "hdfgrtr_el2",
         "hdfgwtr_el2",
+        "hafgrtr_el2",
 
         // FEAT_MPAM
         "mpamidr_el1",
@@ -2906,6 +2941,14 @@ namespace ArmISA
         "mpamvpm5_el2",
         "mpamvpm6_el2",
         "mpamvpm7_el2",
+
+        "pire0_el1",
+        "pire0_el2",
+        "pire0_el12",
+        "pir_el1",
+        "pir_el2",
+        "pir_el3",
+        "pir_el12",
 
         "num_phys_regs",
 
