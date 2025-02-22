@@ -16,7 +16,10 @@
         "EXT_PYTHONPATH": "${workspaceFolder}/src/python",
     },
     "python.analysis.extraPaths": [
-        "${workspaceFolder}/src/python"
+        "${workspaceFolder}/src/python",
+        // "src/python",
+        "ext",
+        "tests"
     ],
     "files.watcherExclude": {
         "**/build/**": true,
