@@ -21,6 +21,9 @@ TARGET=ARM_RISCV
 # TARGET=ALL
 # TARGET=RISCV
 
+# macos
+alias nproc="sysctl -n hw.physicalcpu"
+
 scons --no-colors -j$(nproc) build/$TARGET/gem5.opt
 scons build/$TARGET/compile_commands.json
 
