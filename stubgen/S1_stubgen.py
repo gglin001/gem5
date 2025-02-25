@@ -4,6 +4,7 @@ import os
 fp_mods = "stubgen/m5.mods.csv"
 src_dir = os.path.dirname(os.path.dirname(__file__))
 
+m5_objects_dir = "src/python/m5/objects"
 m5_objects_init = "src/python/m5/objects/__init__.pyi"
 m5_init = "src/python/m5/__init__.pyi"
 # TODO: replace with logging module
@@ -57,6 +58,12 @@ def deal_m5_objects_init(mod: str, abspath: str):
     else:
         # imp = f"from {abspath} import {mod}"
         imp = f"from {abspath} import *"
+
+        # create `m5.objects.CLASS.pyi`
+        class_name = mod.split(".")[-1]
+        with open(f"{m5_objects_dir}/{class_name}.pyi", "w") as class_fp:
+            print(imp, file=class_fp)
+
     print(imp, file=fp_m5_objects_init)
 
 
