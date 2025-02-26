@@ -75,6 +75,22 @@ system.cpu.createThreads()
 root = Root(full_system=False, system=system)
 m5.instantiate()
 
+# enable for lldb with attach in vscode
+# breakpoint()
+
+# works for gem5.debug
+m5.trace.enable()
+
+# common
+m5.debug.flags["Fetch"].enable()
+m5.debug.flags["Decode"].enable()
+m5.debug.flags["Branch"].enable()
+# riscv
+m5.debug.flags["RiscvMisc"].enable()
+m5.debug.flags["Stack"].enable()
+m5.debug.flags["TLB"].enable()
+m5.debug.flags["Semihosting"].enable()
+
 print(f"Beginning simulation!")
 exit_event = m5.simulate()
 print(f"Exiting @ tick {m5.curTick()} because {exit_event.getCause()}")

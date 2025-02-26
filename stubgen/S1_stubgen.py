@@ -85,6 +85,15 @@ def main():
     imp = f"from ....sim.System import System as System"
     print(imp, file=fp_m5_objects_init)
 
+    # special case, hardcode
+    imp_init = """
+from . import (
+    trace,
+    debug,
+)
+    """
+    print(imp_init, file=fp_m5_init)
+
 
 if __name__ == "__main__":
     main()
